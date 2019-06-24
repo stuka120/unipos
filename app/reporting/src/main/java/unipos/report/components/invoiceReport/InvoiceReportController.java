@@ -96,7 +96,7 @@ public class InvoiceReportController {
         Map<String,Object> parameterMap = new HashMap<String,Object>();
         ArrayList<InvoiceReportDto> invoices = new ArrayList<>(Collections.singletonList(invoiceReportDto));
 
-        JRDataSource JRdataSource = new JRBeanCollectionDataSource(invoices);
+        JRDataSource JRdataSource = new JRBeanCollectionDataSource(new ArrayList<>(Collections.singletonList(invoiceReportDto)));
 
         try {
             JasperReport jr = reportCompiledSingleton.getJr();
