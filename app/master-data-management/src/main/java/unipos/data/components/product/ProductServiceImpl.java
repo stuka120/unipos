@@ -323,12 +323,29 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void reduceStockAmountForProductGuid(Product product) {
         Product productFromDb = findProductById(product.getId());
-        if ((productFromDb.getStockAmount() - product.getStockAmount()) > 0) {
-            productFromDb.setStockAmount(productFromDb.getStockAmount() - product.getStockAmount());
-        } else {
-            productFromDb.setStockAmount(0);
+        if(productFromDb != null) {
+            if ((productFromDb.getStockAmount() - product.getStockAmount()) > 0) {
+                productFromDb.setStockAmount(productFromDb.getStockAmount() - product.getStockAmount());
+            } else {
+                productFromDb.setStockAmount(0);
+            }
+            productRepository.save(productFromDb);
+
+            if(productFromDb.getLinkedArticleGuids() != null) {
+                for(String linkedArticleId : productFromDb.getLinkedArticleGuids()) {
+                    Product p = findProductById(linkedArticleId);
+                    if(p != null) {
+                        if ((p.getStockAmount() - product.getStockAmount()) > 0) {
+                            p.setStockAmount(p.getStockAmount() - product.getStockAmount());
+                        } else {
+                            p.setStockAmount(0);
+                        }
+                        productRepository.save(p);
+                    }
+                }
+            }
+
+            socketRemoteInterface.sendToAll("/topic/stockAmountChanged", "rofl");
         }
-        productRepository.save(productFromDb);
-        socketRemoteInterface.sendToAll("/topic/stockAmountChanged", "rofl");
     }
 }

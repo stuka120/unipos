@@ -60,6 +60,11 @@ public class Product implements Syncable {
     private List<String> attributes = new ArrayList<>();
 
     private int stockAmount = -1;
+    //Das ist eine Liste aller guids, für welche eine erhöhung, verniedrigung oder setzung auf einen neuen wert
+    //Der Wert mit übernommen wird. Erhöhe ich zu mBeispiel den Wert von dieser ArtikelInstanze um 1, so werden auch
+    //Die Mengen der Artikel erhöht, welche in dieser Liste stehen.
+    //Die Guid ist dabei die von der MONGODB generierte ID!!!
+    private ArrayList<String> linkedArticleGuids = new ArrayList<>();
 
     private int sortOrder = -1;
 

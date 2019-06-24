@@ -91,6 +91,7 @@ public class ProductControllerTest extends AbstractRestControllerTest {
                 .category(null)
                 .guid(UUID.randomUUID().toString())
                 .attributes(new ArrayList<>())
+                .linkedArticleGuids(new ArrayList<>())
                 .build();
 
         doNothing().when(productService).saveProduct(any(Product.class));
@@ -114,6 +115,7 @@ public class ProductControllerTest extends AbstractRestControllerTest {
                 .category(new Category("asdf", null))
                 .guid(UUID.randomUUID().toString())
                 .attributes(new ArrayList<>())
+                .linkedArticleGuids(new ArrayList<>())
                 .build();
 
         doNothing().when(productService).saveProduct(any(Product.class));
@@ -291,6 +293,7 @@ public class ProductControllerTest extends AbstractRestControllerTest {
                 .productIdentifier(1L)
                 .guid(UUID.randomUUID().toString())
                 .attributes(new ArrayList<>())
+                .linkedArticleGuids(new ArrayList<>())
                 .build();
     }
 
