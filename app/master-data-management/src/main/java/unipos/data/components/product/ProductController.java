@@ -56,6 +56,10 @@ public class ProductController {
             product.setCategory(null);
         }
 
+        if(product.getStockAmount() == 0) {
+            product.setStockAmount(-1);
+        }
+
         //Check if this is an update or  a new paymentMethod
         if (!productLogService.existsProductNumber(product.getProductIdentifier())) {
             //Save the paymentMethod as a new Product inside the Product Collection

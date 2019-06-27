@@ -4,7 +4,11 @@ define([
 ], function (angular) {
     return ['pos.productService', 'pos.socketService', function (productService, socketService) {
         socketService.subscribeBroadcast("stockAmountChanged", function (data) {
-            productService.setAllProducts(true);
+            var updates = JSON.parse(data.payload);
+            updates.forEach(function(updateLine) {
+                productService.updateStockAmountForProduct(updateLine.productGuid, updateLine.newStockAmount)
+            });
+            //productService.setAllProducts(true);
         });
     }];
 });

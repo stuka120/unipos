@@ -134,5 +134,12 @@ define([
                     }
                 });
             };
+            this.updateStockAmountForProduct = function (productGuid, newStockAmount) {
+                var toChangeProduct = Enumerable.From(self.products).FirstOrDefault({}, function (x) {
+                    return x.guid == productGuid;
+                });
+                toChangeProduct.stockAmount = newStockAmount;
+                rootScope.$emit(self.serviceName + "-products");
+            };
         }];
 });

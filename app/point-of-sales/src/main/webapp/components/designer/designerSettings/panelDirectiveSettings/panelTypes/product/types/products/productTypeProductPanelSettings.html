@@ -31,7 +31,7 @@
                     <label class="col-sm-2 control-label">Produkte:</label>
                     <div class="col-sm-10">
                         <ui-select multiple ng-model="model.products" theme="bootstrap" ng-disabled="model.allProducts">
-                            <ui-select-match placeholder="Produkte">{{$item.name}}</ui-select-match>
+                            <ui-select-match placeholder="Verlinkte Produkte">{{$item.name}}</ui-select-match>
                             <ui-select-choices repeat="item in items | filter:$select.search">
                                 {{item.name}}
                             </ui-select-choices>

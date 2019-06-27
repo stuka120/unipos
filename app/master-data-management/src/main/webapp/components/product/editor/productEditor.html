@@ -35,8 +35,8 @@
     </div>
 </script>
 <div class="modal-header">
-    <h3 class="modal-title" ng-show="create">Artikel erstellen</h3>
-    <h3 class="modal-title" ng-hide="create">Artikel bearbeiten</h3>
+    <h3 class="modal-title" ng-show="create">Artikel "{{model.name}}" erstellen</h3>
+    <h3 class="modal-title" ng-hide="create">Artikel "{{model.name}}" bearbeiten</h3>
 </div>
 <div class="modal-body form-horizontal">
     <uib-tabset>
@@ -74,13 +74,6 @@
                     <input type="number" min="0.00" step="0.01" class="form-control"
                            ng-disabled="product.customPriceInputAllowed" ng-model="model.price">
                     <div class="help-block">Der Verkaufspreis des Artikels.</div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-md-2 control-label">Lagerstand:</label>
-                <div class="col-md-10">
-                    <input class="form-control" type="number" step="1" ng-model="model.stockAmount">
-                    <div class="help-block">Der aktuelle Lagerstand des Artikels.<i> (optional)</i></div>
                 </div>
             </div>
             <div class="form-group">
@@ -129,7 +122,32 @@
                 </uib-accordion>
             </div>
         </uib-tab>
-        <uib-tab index="2" heading="Löschen" ng-hide="create">
+        <uib-tab index="2" heading="Lager">
+            <div style="margin-top: 2%">
+                <uib-accordion close-others="oneAtATime">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Lagerstand:</label>
+                        <div class="col-md-10">
+                            <input class="form-control" min="0" type="number" step="1" ng-model="model.stockAmount">
+                            <div class="help-block">Der Anfangs-Lagerstand des Artikels.<i> (optional)</i></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Produkte:</label>
+                        <div class="col-sm-10">
+                            <ui-select multiple ng-model="model.selectedLinkedArticles" theme="bootstrap" ng-disabled="!availableProducts">
+                                <ui-select-match placeholder="Produkte">{{$item.name}} [{{$item.category.name}}]</ui-select-match>
+                                <ui-select-choices repeat="item in availableProducts | filter:$select.search">
+                                    {{item.name}} [{{item.category.name}}]
+                                </ui-select-choices>
+                            </ui-select>
+                            <div class="help-block">Wird dieser Artikel ({{model.name}} [{{model.category.name}}]) boniert, so wird auch die Menge bei den verlinkten Artikeln abgezogen.<i> (optional)</i></div>
+                        </div>
+                    </div>
+                </uib-accordion>
+            </div>
+        </uib-tab>
+        <uib-tab index="3" heading="Löschen" ng-hide="create">
             <div style="margin-top: 2%">
                 <div class="alert alert-danger" role="alert">
                     <div class="row">

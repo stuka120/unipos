@@ -4,13 +4,24 @@ define([
     'data.linq',
     'css!data.productEditorController'
 ], function (angular, Enumerable) {
-    return ["$scope", 'categoryService', 'companyService', 'productService', 'initOptions', '$uibModal', '$uibModalInstance', 'model', 'defaultProduct', 'create',
-        function (scope, categoryService, companyService, productService, initOptions, uibModal, uibModalInstance, model, defaultProduct, create) {
+    return ["$scope", 'categoryService', 'companyService', 'productService', 'initOptions', '$uibModal', '$uibModalInstance', 'model', 'defaultProduct', 'create', 'availableProducts',
+        function (scope, categoryService, companyService, productService, initOptions, uibModal, uibModalInstance, model, defaultProduct, create, availableProducts) {
             scope.model = model;
+            scope.model.selectedLinkedArticles = [];
             scope.defaultProduct = angular.copy(defaultProduct);
             scope.initOptions = initOptions;
             scope.productStores = model.stores;
             scope.create = create;
+            scope.availableProducts = Enumerable.from(availableProducts.items).where(function(x) {
+                return x.id !== model.id;
+            }).toArray();
+            scope.model.selectedLinkedArticles = Enumerable.from(availableProducts.items).where(function(x) {
+                return scope.model.linkedArticleGuids.indexOf(x.id) !== -1
+            }).toArray();
+
+            if(model.stockAmount === -1) {
+                model.stockAmount = ''
+            }
 
             categoryService.findAll().$promise.then(function (data) {
                 scope.categories = data;
@@ -70,6 +81,7 @@ define([
                         }
                     });
                 });
+                scope.model.linkedArticleGuids = scope.model.selectedLinkedArticles.map(function(item) {return item.id})
                 scope.model.stores = stores;
                 uibModalInstance.close(true);
             };

@@ -1,6 +1,8 @@
 package unipos.data.components.product;
 
-import org.hibernate.mapping.Collection;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import unipos.data.components.productLog.ProductLogService;
 import unipos.data.components.sequence.ProductLogSequenceRepository;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -56,6 +58,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     SocketRemoteInterface socketRemoteInterface;
+
+    Gson gson = new GsonBuilder().serializeNulls().create();
 
     @Override
     public void setSortOrderAutomatically(ProductLog productLog) {
@@ -321,31 +325,39 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void reduceStockAmountForProductGuid(Product product) {
+    public synchronized void reduceStockAmountForProductGuid(Product product) {
         Product productFromDb = findProductById(product.getId());
         if(productFromDb != null) {
-            if ((productFromDb.getStockAmount() - product.getStockAmount()) > 0) {
-                productFromDb.setStockAmount(productFromDb.getStockAmount() - product.getStockAmount());
-            } else {
-                productFromDb.setStockAmount(0);
-            }
+            List<StockAmountChangedDto> stockChanges = new ArrayList<>();
+
+            productFromDb.decreaseStockAmount(product.getStockAmount());
             productRepository.save(productFromDb);
+
+            stockChanges.add(new StockAmountChangedDto(productFromDb.getGuid(), productFromDb.getStockAmount()));
 
             if(productFromDb.getLinkedArticleGuids() != null) {
                 for(String linkedArticleId : productFromDb.getLinkedArticleGuids()) {
                     Product p = findProductById(linkedArticleId);
                     if(p != null) {
-                        if ((p.getStockAmount() - product.getStockAmount()) > 0) {
-                            p.setStockAmount(p.getStockAmount() - product.getStockAmount());
-                        } else {
-                            p.setStockAmount(0);
-                        }
+                        p.decreaseStockAmount(product.getStockAmount());
                         productRepository.save(p);
+                        stockChanges.add(new StockAmountChangedDto(p.getGuid(), p.getStockAmount()));
                     }
                 }
             }
 
-            socketRemoteInterface.sendToAll("/topic/stockAmountChanged", "rofl");
+            socketRemoteInterface.sendToAll("/topic/stockAmountChanged", gson.toJson(stockChanges) );
         }
     }
 }
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+class StockAmountChangedDto {
+    private String productGuid;
+    private int newStockAmount;
+}
+

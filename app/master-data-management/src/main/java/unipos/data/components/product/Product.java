@@ -1,8 +1,5 @@
 package unipos.data.components.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +7,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import unipos.common.remote.sync.model.Syncable;
@@ -19,7 +15,6 @@ import unipos.data.components.category.Category;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Dominik on 23.07.2015.
@@ -136,5 +131,25 @@ public class Product implements Syncable {
         this.guid = guid;
     }
 
+    /**
+     * Increases the stock amount for the product.
+     * A negativ param decreases the stock amount
+     * @param toIncreaseStockAmount the increment value
+     */
+    public void increaseStockAmount(int toIncreaseStockAmount) {
+        if ((getStockAmount() + toIncreaseStockAmount > 0)) {
+            setStockAmount(getStockAmount() + toIncreaseStockAmount);
+        } else {
+            setStockAmount(0);
+        }
+    }
 
+    /**
+     * Decreases the stock amount for the product.
+     * A negativ param increases the stock amount
+     * @param toDecreaseStockAmount the decrement value
+     */
+    public void decreaseStockAmount(int toDecreaseStockAmount) {
+        increaseStockAmount(-toDecreaseStockAmount);
+    }
 }

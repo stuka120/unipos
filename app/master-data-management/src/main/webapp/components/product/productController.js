@@ -14,6 +14,7 @@ define([
                 $this.storeGuids = null;
                 //Setup a default Product Object
                 $this.defaultProduct = {};
+                $this.availableProducts = {};
                 //Initialise the default Objects
                 $scope.buttonDisabled = true;
                 $scope.model = {};
@@ -56,7 +57,8 @@ define([
                         resolve: {
                             model: $scope.model,
                             defaultProduct: $this.defaultProduct,
-                            create: create
+                            create: create,
+                            availableProducts: $this.availableProducts
                         }
                     });
                     modalInstance.result.then(function (createOrUpdate) {
@@ -90,6 +92,7 @@ define([
                 $this.updateUiGridDataFromDatabase = function () {
                     if ($scope.selectedCompany === 'all') {
                         productService.findAll().$promise.then(function (data) {
+                            $this.availableProducts.items = data;
                             $this.setNextProductNumber();
                             $scope.gridOptions.data = Enumerable.from(data).orderBy(function (x) {
                                 return x.sortOrder;
