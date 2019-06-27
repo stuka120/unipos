@@ -48,5 +48,6 @@ public interface ProductService {
 
     List<Product> getByAtributes(List<String> attributes);
 
-    void reduceStockAmountForProductGuid(Product product);
+    void reduceStockAmountForProductGuid(Product product, int recudeAmount);
+    void reduceStockAmountForProductGuid(int productNumber, int reduceAmount);
 }

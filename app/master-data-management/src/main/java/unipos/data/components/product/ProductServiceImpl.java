@@ -325,12 +325,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public synchronized void reduceStockAmountForProductGuid(Product product) {
+    public synchronized void reduceStockAmountForProductGuid(Product product, int reduceAmount) {
         Product productFromDb = findProductById(product.getId());
-        if(productFromDb != null) {
+        if(productFromDb != null && productFromDb.getStockAmount() > 0) {
             List<StockAmountChangedDto> stockChanges = new ArrayList<>();
 
-            productFromDb.decreaseStockAmount(product.getStockAmount());
+            productFromDb.decreaseStockAmount(reduceAmount);
             productRepository.save(productFromDb);
 
             stockChanges.add(new StockAmountChangedDto(productFromDb.getGuid(), productFromDb.getStockAmount()));
@@ -338,8 +338,8 @@ public class ProductServiceImpl implements ProductService {
             if(productFromDb.getLinkedArticleGuids() != null) {
                 for(String linkedArticleId : productFromDb.getLinkedArticleGuids()) {
                     Product p = findProductById(linkedArticleId);
-                    if(p != null) {
-                        p.decreaseStockAmount(product.getStockAmount());
+                    if(p != null && p.getStockAmount() > 0) {
+                        p.decreaseStockAmount(reduceAmount);
                         productRepository.save(p);
                         stockChanges.add(new StockAmountChangedDto(p.getGuid(), p.getStockAmount()));
                     }
@@ -348,6 +348,12 @@ public class ProductServiceImpl implements ProductService {
 
             socketRemoteInterface.sendToAll("/topic/stockAmountChanged", gson.toJson(stockChanges) );
         }
+    }
+
+    @Override
+    public void reduceStockAmountForProductGuid(int productNumber, int reduceAmount) {
+        Product productFromDb = findProductByProductIdentifier(productNumber);
+        reduceStockAmountForProductGuid(productFromDb, reduceAmount);
     }
 }
 

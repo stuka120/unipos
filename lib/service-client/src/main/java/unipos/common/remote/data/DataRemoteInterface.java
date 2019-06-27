@@ -45,4 +45,5 @@ public interface DataRemoteInterface {
     Company addCompany(Company company);
 
     void reduceStockAmountForProductGuid(Product product);
+    void reduceStockAmountForProductGuid(int productNumber, int reduceAmount);
 }

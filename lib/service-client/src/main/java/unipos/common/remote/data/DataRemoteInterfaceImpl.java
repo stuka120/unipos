@@ -207,4 +207,13 @@ public class DataRemoteInterfaceImpl implements DataRemoteInterface {
         }
         ResponseEntity<Product> responseEntity = restTemplate.exchange(UrlContainer.BASEURL + UrlContainer.DATA_POST_REDUCT_STOCK_AMOUNT, HttpMethod.POST, entity, Product.class);
     }
+
+    @Override
+    public void reduceStockAmountForProductGuid(int productNumber, int reduceAmount) {
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Content-Type", "application/json;charset=UTF-8");
+
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        restTemplate.postForLocation(UrlContainer.BASEURL + UrlContainer.DATA_POST_REDUCT_STOCK_AMOUNT_BY_PRODUCT_NUMBER + "?productNumber="+productNumber+"&reduceAmount="+reduceAmount, entity, new Object());
+    }
 }

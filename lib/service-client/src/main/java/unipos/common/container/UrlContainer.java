@@ -50,6 +50,7 @@ public class UrlContainer {
     public static final String DATA_GET_STORE_BY_USER = "/data/stores/findByUser";
     public static final String DATA_GET_STORE_BY_USER_ID = "/data/stores/findByUserId";
     public static final String DATA_POST_REDUCT_STOCK_AMOUNT = "/data/products/reduceStockAmountForProductGuid";
+    public static final String DATA_POST_REDUCT_STOCK_AMOUNT_BY_PRODUCT_NUMBER = "/data/products/reduceStockAmountForProductGuid/productNumber";
 
     public static final String DATA_ADD_COMPANY = "/data/companies";
 

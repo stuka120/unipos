@@ -82,16 +82,16 @@ define([
                         orderService.addOrderItem(productOrderItem);
 
                         // this might be an error
-                        if (product.stockAmount >= 0) {
-                            queueService.addToQueue({
-                                url: urlSettings.baseUrl + urlSettings.reduceStockAmountForProductGuid,
-                                method: "post",
-                                data: {
-                                    id: product.id,
-                                    stockAmount: quantity
-                                }
-                            });
-                        }
+                        // if (product.stockAmount >= 0) {
+                        //     queueService.addToQueue({
+                        //         url: urlSettings.baseUrl + urlSettings.reduceStockAmountForProductGuid,
+                        //         method: "post",
+                        //         data: {
+                        //             id: product.id,
+                        //             stockAmount: quantity
+                        //         }
+                        //     });
+                        // }
 
                         //ZURUECKSTELLEN
                         textService.setText(textService.textModes.quantity, "");

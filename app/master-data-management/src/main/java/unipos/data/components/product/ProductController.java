@@ -239,7 +239,12 @@ public class ProductController {
 
     @RequestMapping(value = "/reduceStockAmountForProductGuid", method = RequestMethod.POST)
     public void reduceStockAmountForProductGuid(@RequestBody Product product, HttpServletResponse response) throws IOException {
-        productService.reduceStockAmountForProductGuid(product);
+        productService.reduceStockAmountForProductGuid(product, product.getStockAmount());
+    }
+
+    @RequestMapping(value = "/reduceStockAmountForProductGuid/productNumber", method = RequestMethod.POST)
+    public void reduceStockAmountForProductGuid(int productNumber, int reduceAmount) throws IOException {
+        productService.reduceStockAmountForProductGuid(productNumber, reduceAmount);
     }
 
     @RequestMapping(value = "/setSortOrderToNumber", method = RequestMethod.GET)

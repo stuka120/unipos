@@ -39,6 +39,8 @@ public abstract class OrderItemController<T extends OrderItem> {
     @ResponseStatus(HttpStatus.OK)
     public synchronized void createNewOrderItem(HttpServletRequest request, @ApiParam @RequestBody T orderItem) {
 
+        beforeOrderItemCreation(request, orderItem);
+
         orderItemService.saveOrderItem(orderItem);
 
         String socketTarget;
@@ -49,9 +51,14 @@ public abstract class OrderItemController<T extends OrderItem> {
             socketTarget = "/topic/productOrderItem/add";
         }
 
+        afterOrderItemCreation(request, orderItem);
+
         MultiValueMap<String, String> mvm = new LinkedMultiValueMap<>();
         mvm.add("target", socketTarget);
         mvm.add("data", gson.toJson(orderItem));
         restTemplate.postForObject(UrlContainer.BASEURL+UrlContainer.SOCKET_SEND_TO_ALL, mvm, Void.class);
     }
+
+    protected void beforeOrderItemCreation(HttpServletRequest request, T orderItem) {}
+    protected void afterOrderItemCreation(HttpServletRequest request, T orderItem) {}
 }
