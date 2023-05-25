@@ -19,6 +19,8 @@ define([
                 $scope.buttonDisabled = true;
                 $scope.model = {};
                 $scope.model.category = {};
+                $scope.model.stockAmount = -1;
+                $scope.model.linkedArticleGuids = [];
                 $scope.selectedCompany = 'all';
 
                 companyService.findAll().$promise.then(function (data) {
@@ -235,6 +237,10 @@ define([
                 $scope.resetForm = function () {
                     $scope.gridApi.selection.clearSelectedRows();
                     $scope.model = {};
+                    $scope.model.category = {};
+                    $scope.model.stockAmount = -1;
+                    $scope.model.linkedArticleGuids = [];
+                    $scope.selectedCompany = 'all';
                     $this.removeUiGridSelectionColor();
                     $this.setNextProductNumber();
                     $scope.buttonDisabled = true;
