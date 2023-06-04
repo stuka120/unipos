@@ -273,11 +273,11 @@
     <repositories>
         <repository>
             <id>Default Repository</id>
-            <url> http://repo.maven.apache.org/maven2/</url>
+            <url>https://repo.maven.apache.org/maven2/</url>
         </repository>
         <repository>
-            <id>Unipos Repository</id>
-            <url>http://repo.unipos.at/artifactory/plugins-release-local</url>
+            <id>Jaspersoft</id>
+            <url>https://jaspersoft.jfrog.io/ui/native/third-party-ce-artifacts/</url>
         </repository>
         <repository>
             <id>fdvsolution.public</id>

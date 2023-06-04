@@ -160,9 +160,9 @@ public class InvoiceReportController {
                 .filter(x -> x.getProduct().getCategory().getName().toUpperCase().contains("Cafe".toUpperCase()) && !x.reversalApplied)
                 .collect(Collectors.toList());
 
-        List<ProductInvoiceItem> hendlItems = invoice.getInvoiceItems().stream().filter(x -> x instanceof ProductInvoiceItem)
+        List<ProductInvoiceItem> separateBonSpeisen = invoice.getInvoiceItems().stream().filter(x -> x instanceof ProductInvoiceItem)
                 .map(x -> (ProductInvoiceItem)x)
-                .filter(x -> x.getProduct().getNumber().equals(9L) && !x.reversalApplied)
+                .filter(x -> x.getProduct().getCategory().getName().toUpperCase().contains("SpeisenSeparatBon".toUpperCase()) && !x.reversalApplied)
                 .collect(Collectors.toList());
 
         InvoiceReportDto invoiceReportDto = InvoiceReportDto.builder()
@@ -181,7 +181,7 @@ public class InvoiceReportController {
                 .invoiceItems(invoice.getInvoiceItems())
                 .invoiceItemsGetraenke(getraenkeItems)
                 .invoiceItemsEssen(essenItems)
-                .invoiceItemsHendl(hendlItems)
+                .invoiceItemsHendl(separateBonSpeisen)
                 .invoiceItemsCafe(cafeItems)
                 .build();
 
