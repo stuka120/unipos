@@ -401,7 +401,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         unipos.common.remote.pos.model.ReversalInvoice remoteReversalInvoice = mapper.map(reversalInvoice, unipos.common.remote.pos.model.ReversalInvoice.class);
 
         reportRemoteInterface.revertInvoice(remoteReversalInvoice, request);
-        invoice.getInvoiceItems().stream().filter(x -> x instanceof ProductInvoiceItem).map(x -> (ProductInvoiceItem)x).filter(x -> x.getProduct().getStockAmount() > -1).forEach(poi -> {
+        invoice.getInvoiceItems().stream().filter(x -> x instanceof ProductInvoiceItem).map(x -> (ProductInvoiceItem)x).filter(x -> x.getProduct().getStockAmount() > -1 && !x.isReversalApplied()).forEach(poi -> {
             poi.getProduct().setStockAmount(poi.quantity * -1);
             dataRemoteInterface.reduceStockAmountForProductGuid(poi.getProduct());
         });

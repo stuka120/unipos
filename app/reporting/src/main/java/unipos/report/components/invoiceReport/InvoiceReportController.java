@@ -162,7 +162,7 @@ public class InvoiceReportController {
 
         List<ProductInvoiceItem> separateBonSpeisen = invoice.getInvoiceItems().stream().filter(x -> x instanceof ProductInvoiceItem)
                 .map(x -> (ProductInvoiceItem)x)
-                .filter(x -> x.getProduct().getCategory().getName().toUpperCase().contains("SpeisenSeparatBon".toUpperCase()) && !x.reversalApplied)
+                .filter(x -> x.getProduct().getCategory().getName().toUpperCase().contains("EssenSeparatBon".toUpperCase()) && !x.reversalApplied)
                 .collect(Collectors.toList());
 
         InvoiceReportDto invoiceReportDto = InvoiceReportDto.builder()
